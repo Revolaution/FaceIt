@@ -9,7 +9,7 @@
 import UIKit
 
 class FaceViewController: UIViewController {
-
+    // Model
     var expression = FacialExpression( eyes: .Open, eyeBrows: .Normal, mouth: .Smile) {
         didSet {
             // will only run after initialization
@@ -17,6 +17,7 @@ class FaceViewController: UIViewController {
         }
     }
     
+    // View
     @IBOutlet weak var faceView: FaceView! {
         didSet {
             faceView.addGestureRecognizer(UIPinchGestureRecognizer(target: faceView, action: #selector(FaceView.changeScale(_:))
@@ -54,11 +55,11 @@ class FaceViewController: UIViewController {
         expression.mouth = expression.mouth.happierMouth()
     }
     private var mouthCurvatures = [
-    FacialExpression.Mouth.Frown: -1.0,
-    .Grin : 0.5,
-    .Smile : 1.0,
-    .Smirk : -0.5,
-    .Neutral : 0.0
+        FacialExpression.Mouth.Frown: -1.0,
+        .Grin : 0.5,
+        .Smile : 1.0,
+        .Smirk : -0.5,
+        .Neutral : 0.0
     ]
     
     private var eyeBrowTilts = [
@@ -68,15 +69,15 @@ class FaceViewController: UIViewController {
     ]
     
     private func updateUI() {
-        switch expression.eyes {
-        case .Open: faceView.eyesOpen = true
-        case .Closed: faceView.eyesOpen = false
-        case .Squinting: faceView.eyesOpen = false
+        if faceView != nil {
+            switch expression.eyes {
+            case .Open: faceView.eyesOpen = true
+            case .Closed: faceView.eyesOpen = false
+            case .Squinting: faceView.eyesOpen = false
+            }
+            faceView.mouthCurvature = mouthCurvatures[expression.mouth] ?? 0.0
+            faceView.eyeBrowTilt = eyeBrowTilts[expression.eyeBrows] ?? 0.0
         }
-        
-        faceView.mouthCurvature = mouthCurvatures[expression.mouth] ?? 0.0
-        faceView.eyeBrowTilt = eyeBrowTilts[expression.eyeBrows] ?? 0.0
     }
-
 }
 
